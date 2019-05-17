@@ -1,7 +1,7 @@
 /**
  * Public Transit
- * Author: Your Name and Carolyn Yao
- * Does this compile? Y/N
+ * Author: Eldrid Gonsalves and Carolyn Yao
+ * Does this compile? Y/N , YES
  */
 
 /**
@@ -10,7 +10,13 @@
  * shortest-paths algorithm. As it is, you can run this class and get the solutions
  * from the existing shortest-path algorithm.
  */
+
+import java.util.ArrayList;
+import java.lang.*;
+
 public class FastestRoutePublicTransit {
+
+  public static int[] shortestPathTimes; //this will record the times from the algorithm
 
   /**
    * The algorithm that could solve for shortest travel time from a station S
@@ -34,7 +40,19 @@ public class FastestRoutePublicTransit {
   ) {
     // Your code along with comments here. Feel free to borrow code from any
     // of the existing method. You can also make new helper methods.
-    return 0;
+
+    /*
+      this algorithm involves calling the shortestTime method
+      and making a copy of the times array from the source S
+      to the final vertex T and saves the time to a variable
+    */
+    shortestTime(lengths, S); //call the method to create the shortest path tree
+    int travelTime = startTime + shortestPathTimes[T]; //find the time it takes to travel to vertex T at the start time
+    int waitTime = 0; //set waitTime as 0 because there is a chance to make it just as the train gets to T
+    if(travelTime < first[S][T]) { //we get to the location before the train
+      waitTime = Math.abs(first[S][T] - travelTime); //set the wait time to be the difference between traveltime and train's arrival time
+    }
+    return waitTime + travelTime; //return the shortestTravelTime which is the waitTime + travelTime between S and T
   }
 
   /**
@@ -104,7 +122,8 @@ public class FastestRoutePublicTransit {
         }
       }
     }
-
+    shortestPathTimes = new int[times.length];
+    System.arraycopy(times, 0, shortestPathTimes, 0, times.length); //make a copy of the array
     printShortestTimes(times);
   }
 
